@@ -1,0 +1,13 @@
+.ant-picker-calendar-full .ant-picker-panel .ant-picker-body th {
+    text-align: left;
+    padding-left: 10px !important;
+}
+
+.ant-picker-cell {
+    text-align: left;
+    height: 10px;
+}
+
+.ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date-content {
+    height: 42px !important;
+}
