@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { Button } from '../forms/Button';
-import Message from '../messages/Message';
+import Message from '../helpers/Message';
 
 function UserNavbar() {
   const { t } = useTranslation('general');

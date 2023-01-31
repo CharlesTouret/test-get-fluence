@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import loginLeftImage from '../../images/login/login-left-image.jpg';
 
-function DisplayLeftDiv() {
+function AuthLeftDiv() {
   return (
     <LeftDiv style={{
       backgroundImage: `url(${loginLeftImage})`,
@@ -13,7 +13,7 @@ function DisplayLeftDiv() {
   );
 }
 
-export default DisplayLeftDiv;
+export default AuthLeftDiv;
 
 const LeftDiv = styled.div`
   display: flex;

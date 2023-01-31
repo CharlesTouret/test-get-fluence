@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import UserNavbar from '../navigation/UserNavbar';
 import { Button } from '../forms/Button';
 
-export default function Search() {
+function Error() {
   const { t } = useTranslation('error');
   const navigate = useNavigate();
   return (
@@ -14,12 +14,14 @@ export default function Search() {
         <SubtitleDiv>
           <Title>{t('errorPageTitle').toUpperCase()}</Title>
           <SubTitle>{t('errorPageSubTitle')}</SubTitle>
-          <Button label={t('errorButtonLabel')} onClick={() => navigate('/mysaas')} />
+          <Button label={t('errorButtonLabel')} onClick={() => navigate('/profile')} />
         </SubtitleDiv>
       </Container>
     </Page>
   );
 }
+
+export default Error;
 
 const Page = styled.div`
     display: flex;

@@ -21,11 +21,6 @@ export const user = createSlice({
       state.language = action.payload.language;
       state.currency = action.payload.currency;
     },
-    updateSession: (state: any, action: { payload: UpdatableUserStateInfos }) => {
-      state.fullName = action.payload.fullName || state.fullName;
-      state.companyName = action.payload.companyName || state.companyName;
-      state.currency = action.payload.currency || state.currency;
-    },
     endSession: (state) => {
       state.id = '';
       state.email = '';
@@ -55,7 +50,7 @@ export interface UpdatableUserStateInfos {
 }
 
 // Action creators are generated for each case reducer function
-export const { initSession, updateSession, endSession } = user.actions;
+export const { initSession, endSession } = user.actions;
 const userReducer = user.reducer;
 
 export default userReducer;

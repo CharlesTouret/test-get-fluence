@@ -14,10 +14,10 @@ import {
   isPassword, isEmail,
 } from '../../../helpers/utils';
 import { BAD_USER_TOKEN, LOGIN_TYPE_USER } from '../../../helpers/constants';
-import Message from '../../messages/Message';
+import Message from '../../helpers/Message';
 import { initSession } from '../../../store/reducers/user';
 import User from '../../../backend/api/user';
-import DisplayLeftDiv from '../../navigation/SIgnupNavbar';
+import AuthLeftDiv from '../../helpers/AuthLeftDiv';
 import { logoutClicked } from '../../navigation/UserDrawer';
 
 function Login() {
@@ -39,7 +39,7 @@ function Login() {
 
   return (
     <Page>
-      <DisplayLeftDiv />
+      <AuthLeftDiv />
       <RightDiv>
         <RightNav>
           <LogoImg onClick={() => window.open(process.env.REACT_APP_LANDING_URL, '_self')} src={logo} alt="" />

@@ -5,23 +5,21 @@ import { Moment } from 'moment';
 import { useTranslation } from 'react-i18next';
 import UserNavbar from '../navigation/UserNavbar';
 import UserDrawer from '../navigation/UserDrawer';
-import Message from '../messages/Message';
-import Auth from '../../backend/api/auth';
-import { BackendApiError } from '../../helpers/types';
+import Message from '../helpers/Message';
 import NotSupportScreenSize from '../helpers/NotSupportScreenSize';
 import { ComponentWithInfoSection, ContainerHeader, Title } from '../helpers/CommonDivs';
 import Information from '../helpers/Information';
-import '../../helpers/css/calendar.css';
 
 function CalendarPage() {
   const [messages, setMessages] = useState({ texts: [], type: null });
   const { t } = useTranslation('calendar');
   const [displayInfos, setDisplayInfos] = useState<boolean>(false);
+
   const getCalendarListData = (value: Moment) => {
-    let listData;
     const year = value.year();
     const month = value.month();
     const day = value.date();
+    // imagin that theses data came from the backend
     let events = [
       { type: 'warning', date: '01-29-2023', content: 'RDV Charles' },
       { type: 'warning', date: '01-30-2023', content: 'RDV Arnaud' },
@@ -32,19 +30,20 @@ function CalendarPage() {
     ];
     events = events.filter((item: any) => {
       const date = new Date(item.date);
-      return (date.getFullYear() === year && date.getMonth() === month && date.getDate() === day);
+      return (
+        date.getFullYear() === year
+        && date.getMonth() === month
+        && date.getDate() === day
+      );
     });
-    if (events.length > 0) {
-      listData = events.map((item) => ({ type: item.type, content: item.content }));
-    }
-    return listData || [];
+    return events;
   };
 
   const dateCellRender = (value: Moment) => {
-    const listData = getCalendarListData(value);
+    const events = getCalendarListData(value);
     return (
       <CalendarCell>
-        {listData.map((item: any) => (
+        {events.map((item: any) => (
           displayRenewalDateModal(item)
         ))}
       </CalendarCell>
@@ -74,25 +73,16 @@ function CalendarPage() {
             <Information display={displayInfos} texts={[t('information')]} onInfo={setDisplayInfos} width="400px" />
           </ComponentWithInfoSection>
         </ContainerHeader>
-        <Calendar
-          style={{ marginLeft: '10%', marginRight: '10%' }}
-          dateCellRender={dateCellRender}
-        />
+        <CalendarDiv>
+          <Calendar
+            dateCellRender={dateCellRender}
+          />
+        </CalendarDiv>
         <Message messages={messages} setMessages={setMessages} withLeftDrawer />
       </Container>
     </Page>
   );
 }
-
-export const resetPwd = async (email: string, setMessages: any, t: any) => {
-  const response = await Auth.resetPassword(email);
-  if (response.status === 200) {
-    setMessages({ texts: [t('resetPasswordSuccessMessage')], type: 'SUCCESS' });
-  } else {
-    const result: BackendApiError = await response.json();
-    setMessages(({ texts: [Auth.mapResetPasswordErrorsMessage(t, result.message)], type: 'ERROR' }));
-  }
-};
 
 export default CalendarPage;
 
@@ -117,6 +107,12 @@ const Container = styled.div`
     align-items: center;
     justify-content: flex-start;
   `;
+
+const CalendarDiv = styled.div`
+      padding-left: 75px;
+      padding-right: 75px;
+      padding-right: 75px;
+`;
 
 const CalendarCell = styled.div`
   `;

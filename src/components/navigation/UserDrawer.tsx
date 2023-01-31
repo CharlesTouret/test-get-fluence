@@ -10,7 +10,7 @@ import { ReactComponent as SearchZoomIn } from '../../images/navigation/search-z
 import { ReactComponent as Help } from '../../images/navigation/info-circle.svg';
 import { ReactComponent as Logout } from '../../images/navigation/logout.svg';
 import { ReactComponent as BurgerMenu } from '../../images/navigation/burger-menu.svg';
-import Message from '../messages/Message';
+import Message from '../helpers/Message';
 import useWindowDimensions from '../../helpers/utils';
 import { logout } from '../../store/reducers/auth';
 import { endSession } from '../../store/reducers/user';
@@ -42,9 +42,9 @@ const displayDesktopNav = (isHovering: any, setIsHovering: any, messages: any, s
         <LogoImg onClick={() => window.open(`${process.env.REACT_APP_URL}/profile`, '_self')} src={logo} alt="" />
       </LogoDiv>
       <NavTitleElement>{t('mainMenu').toUpperCase()}</NavTitleElement>
-      {displayNavElement(Chart, t('pages'), 'saasManagement', false, isHovering, setIsHovering, setMessages, navigate, location)}
-      {displayNavSubElement(Chart, t('myProfile'), 'dashboard', false, isHovering, setIsHovering, setMessages, navigate, location)}
-      {displayNavSubElement(SearchZoomIn, t('calendar'), 'mySaas', false, isHovering, setIsHovering, setMessages, navigate, location)}
+      {displayNavElement(Chart, t('pages'), 'pages', false, isHovering, setIsHovering, setMessages, navigate, location)}
+      {displayNavSubElement(Chart, t('myProfile'), 'myProfile', false, isHovering, setIsHovering, setMessages, navigate, location)}
+      {displayNavSubElement(SearchZoomIn, t('calendar'), 'calendar', false, isHovering, setIsHovering, setMessages, navigate, location)}
     </TopDiv>
     <LogoutDiv>
       {displayNavHelpElement(Help, t('help'), 'help', false, isHovering, setIsHovering, t, location)}
@@ -61,12 +61,12 @@ const displayResponsiveNav = (isHovering: any, setIsHovering: any, ref: any, mes
         <ResponsiveContainerOpen ref={ref}>
           <TopDiv>
             <LogoDiv>
-              <LogoImg onClick={() => window.open(`${process.env.REACT_APP_URL}/mysaas`, '_self')} src={logo} alt="" />
+              <LogoImg onClick={() => window.open(`${process.env.REACT_APP_URL}/profile`, '_self')} src={logo} alt="" />
             </LogoDiv>
             <NavTitleElement>{t('mainMenu').toUpperCase()}</NavTitleElement>
-            {displayNavElement(Chart, t('pages'), 'saasManagement', false, isHovering, setIsHovering, setMessages, navigate, location)}
-            {displayNavSubElement(Chart, t('myProfile'), 'dashboard', false, isHovering, setIsHovering, setMessages, navigate, location)}
-            {displayNavSubElement(SearchZoomIn, t('calendar'), 'mySaas', false, isHovering, setIsHovering, setMessages, navigate, location)}
+            {displayNavElement(Chart, t('pages'), 'pages', false, isHovering, setIsHovering, setMessages, navigate, location)}
+            {displayNavSubElement(Chart, t('myProfile'), 'myProfile', false, isHovering, setIsHovering, setMessages, navigate, location)}
+            {displayNavSubElement(SearchZoomIn, t('calendar'), 'calendar', false, isHovering, setIsHovering, setMessages, navigate, location)}
           </TopDiv>
           <LogoutDiv>
             {displayNavHelpElement(Help, t('help'), 'help', false, isHovering, setIsHovering, t, location)}
@@ -181,15 +181,9 @@ export const logoutClicked = (dispatch: any, navigate: any) => {
 };
 
 const elementNavigation: any = {
-  saasManagement: ['/profile', '/calendar', '/satisfactionform', '/deletedSaas', '/blacklistSaas'],
-  dashboard: ['/profile'],
-  mySaas: ['/calendar', '/deletedSaas', '/blacklistSaas'],
-  saasSatisfaction: ['/satisfaction', '/satisfactionform'],
-  saasDiscovery: ['/search', '/search/chooseCategory', '/search/recommendation', '/searches', '/perks', '/search/saas', '/search/comparison', '/shortlist'],
-  search: ['/search', '/search/chooseCategory', '/search/recommendation', '/searches', '/search/saas', '/search/comparison'],
-  perks: ['/perks'],
-  shortlist: ['/shortlist'],
-  settings: ['/settings'],
+  pages: ['/profile', '/calendar'],
+  myProfile: ['/profile'],
+  calendar: ['/calendar'],
 };
 
 const Container = styled.div`
@@ -220,7 +214,7 @@ const LogoDiv = styled.div`
 
 const LogoImg = styled.img`
   cursor: pointer;
-  width: 126px;
+  width: 50px;
 `;
 
 const NavTitleElement = styled.div`

@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
@@ -13,18 +12,11 @@ import { Button } from '../../forms/Button';
 import {
   isPassword, isEmail, isEmpty, isSame, isName,
 } from '../../../helpers/utils';
-import Message from '../../messages/Message';
-import i18n from '../../../helpers/trads/i18n';
+import Message from '../../helpers/Message';
 import { fetchUserInformations } from './Login';
-import searchImage from '../../../images/signup/newSearchImage.svg';
-import importImage from '../../../images/signup/importImage.svg';
-import microscopeImage from '../../../images/signup/microscope.svg';
-import moneyImage from '../../../images/signup/money-send.svg';
-import rankingImage from '../../../images/signup/ranking.svg';
-import starImage from '../../../images/signup/star.svg';
-import LoadingComponent from '../../helpers/LoadingComponent';
 import LogoNavBar from '../../navigation/LogoNavbar';
-import DisplayLeftDiv from '../../navigation/SIgnupNavbar';
+import AuthLeftDiv from '../../helpers/AuthLeftDiv';
+import i18n from '../../../helpers/trads/i18n';
 
 function SignUp() {
   const { t } = useTranslation('signup');
@@ -37,21 +29,10 @@ function SignUp() {
   const [companyName, setCompanyName] = useState('');
   const [job, setJob] = useState('');
   const [numberOfPeopleChoices, setNumberOfPeopleChoices] = useState([{ title: t('1-10'), selected: false }, { title: '11-50', selected: false }, { title: '51-99', selected: false }, { title: '100+', selected: false }]);
-  const [choicesOptions, setChoicesOptions] = useState([{
-    titleEn: 'Find the best tools', title: t('findBestTools'), selected: false, image: microscopeImage,
-  }, {
-    titleEn: 'Get great deals', title: t('saveMoney'), selected: false, image: moneyImage,
-  }, {
-    titleEn: 'Manage my stack', title: t('manageMyStack'), selected: false, image: rankingImage,
-  }, {
-    titleEn: 'All of the above', title: t('allTheAbove'), selected: false, image: starImage,
-  }]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [messages, setMessages] = useState({ texts: [], type: null });
   const [pageNumber, setPageNumber] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [redirectUrl, setRedirectUrl] = useState('');
 
   const handleCompanyNameChange = (e: any) => {
     setCompanyName(e.target.value);
@@ -59,17 +40,32 @@ function SignUp() {
 
   return (
     <Page>
-      <DisplayLeftDiv />
-      { pageNumber === 0 ? DisplayPage0(t, firstName, setFirstName, lastName, setLastName, email, setEmail, password, setPassword, passwordVerification, setPasswordVerification, passwordShown, setPasswordShown, setPageNumber, setMessages, dispatch, navigate) : null}
-      { pageNumber === 1 ? DisplayPage1(firstName, t, companyName, handleCompanyNameChange, job, setJob, setPageNumber, setMessages, numberOfPeopleChoices, setNumberOfPeopleChoices) : null }
-      { pageNumber === 2 ? DisplayPage2(email, companyName, firstName, lastName, password, passwordVerification, job, numberOfPeopleChoices, choicesOptions, setChoicesOptions, setPageNumber, navigate, dispatch, setMessages, t, loading, setLoading) : null }
-      { pageNumber === 3 ? DisplayPage3(loading, setLoading, firstName, setRedirectUrl, redirectUrl, t, navigate) : null }
+      <AuthLeftDiv />
+      { pageNumber === 0 ? DisplayPage0(firstName, setFirstName, lastName, setLastName, email, setEmail, password, setPassword, passwordVerification, setPasswordVerification, passwordShown, setPasswordShown, setPageNumber, setMessages, t, navigate) : null}
+      { pageNumber === 1 ? DisplayPage1(email, firstName, lastName, password, passwordVerification, companyName, job, setJob, numberOfPeopleChoices, setNumberOfPeopleChoices, setPageNumber, setMessages, handleCompanyNameChange, t, navigate, dispatch) : null }
       <Message messages={messages} setMessages={setMessages} />
     </Page>
   );
 }
 
-function DisplayPage0(t: any, firstName: string, setFirstName: any, lastName: string, setLastName: any, email: string, setEmail: any, password: string, setPassword: any, passwordVerification: string, setPasswordVerification: any, passwordShown: boolean, setPasswordShown: any, setPageNumber: any, setMessages: any, dispatch: any, navigate: any) {
+function DisplayPage0(
+  firstName: string,
+  setFirstName: any,
+  lastName: string,
+  setLastName: any,
+  email: string,
+  setEmail: any,
+  password: string,
+  setPassword: any,
+  passwordVerification: string,
+  setPasswordVerification: any,
+  passwordShown: boolean,
+  setPasswordShown: any,
+  setPageNumber: any,
+  setMessages: any,
+  t: any,
+  navigate: any,
+) {
   return (
     <RightDiv>
       <LogoNavBar />
@@ -145,7 +141,15 @@ function DisplayPage0(t: any, firstName: string, setFirstName: any, lastName: st
   );
 }
 
-const validatePage0Form = (firstName: string, lastName: string, email: string, password: string, passwordVerification: string, setMessages: any, t: any): boolean => {
+const validatePage0Form = (
+  firstName: string,
+  lastName: string,
+  email: string,
+  password: string,
+  passwordVerification: string,
+  setMessages: any,
+  t: any,
+): boolean => {
   const errors = [];
   if (!isEmail(email)) errors.push(t('wrongEmailFormat'));
   if (!isPassword(password)) errors.push(t('wrongPasswordFormat'));
@@ -160,7 +164,24 @@ const validatePage0Form = (firstName: string, lastName: string, email: string, p
   return false;
 };
 
-function DisplayPage1(firstName: string, t: any, companyName: string, handleCompanyNameChange: any, job: string, setJob: any, setPageNumber: any, setMessages: any, numberOfPeopleChoices: ButtonOption[], setNumberOfPeopleChoices: any) {
+function DisplayPage1(
+  email: string,
+  firstName: string,
+  lastName: string,
+  password: string,
+  passwordVerification: string,
+  companyName: string,
+  job: string,
+  setJob: any,
+  numberOfPeopleChoices: ButtonOption[],
+  setNumberOfPeopleChoices: any,
+  setPageNumber: any,
+  setMessages: any,
+  handleCompanyNameChange: any,
+  t: any,
+  navigate: any,
+  dispatch: any,
+) {
   return (
     <RightDivPage1>
       <RightNav>
@@ -208,15 +229,32 @@ function DisplayPage1(firstName: string, t: any, companyName: string, handleComp
           <Button
             arrowed
             label={t('nextStep')}
-            onClick={(e: any) => {
-              e.preventDefault();
-              const validate = validatePage1Form(companyName, setMessages, t);
-              if (validate) setPageNumber(2);
+            onClick={async (e: any) => {
+              const listNbOfPeopleInTeam: string[] = numberOfPeopleChoices.filter((option: any) => option.selected === true).map((option: any) => option.title);
+              const employeeNumber = listNbOfPeopleInTeam.length === 1 ? listNbOfPeopleInTeam[0] : null;
+              const language = i18n.resolvedLanguage;
+              // eslint-disable-next-line react/destructuring-assignment
+              const companyNameToLowerCase = companyName.toLowerCase();
+              await submitSignupForm(
+                email,
+                companyNameToLowerCase,
+                firstName,
+                lastName,
+                language,
+                password,
+                passwordVerification,
+                job,
+                employeeNumber,
+                e,
+                navigate,
+                dispatch,
+                setMessages,
+                t,
+              );
             }}
           />
         </SizedButtonDiv>
       </SignupForm>
-      {' '}
       <FooterDiv>
         <LoadBar />
       </FooterDiv>
@@ -235,102 +273,6 @@ const validatePage1Form = (companyName: string, setMessages: any, t: any): boole
   return false;
 };
 
-function DisplayPage2(
-  email: string,
-  companyName: string,
-  firstName: string,
-  lastName: string,
-  password: string,
-  passwordVerification: string,
-  job: string,
-  numberOfPeopleChoices: any[],
-  choicesOptions: any[],
-  setChoicesOptions: any,
-  setPageNumber: any,
-  navigate: any,
-  dispatch: any,
-  setMessages: any,
-  t: any,
-  loading: boolean,
-  setLoading: any,
-) {
-  return (
-    <RightDivPage1>
-      <RightNav>
-        <LogoImg onClick={() => window.open(process.env.REACT_APP_LANDING_URL, '_self')} src={logo} alt="" />
-      </RightNav>
-      <SignupBigForm>
-        <SignupFormTitle>{t('why')}</SignupFormTitle>
-        <OptionCards>
-          {choicesOptions.map((choice: any) => (
-            <OptionCard
-              style={choice.selected ? { border: '1.5px solid #3368DD' } : {}}
-              key={choice.title}
-              onClick={() => {
-                const selectedOptionsTmp = [...choicesOptions];
-                const index = selectedOptionsTmp.findIndex((option) => option.title === choice.title);
-                selectedOptionsTmp[index] = {
-                  titleEn: selectedOptionsTmp[index].titleEn, title: selectedOptionsTmp[index].title, selected: !choicesOptions[index].selected, image: choice.image,
-                };
-                setChoicesOptions(selectedOptionsTmp);
-              }}
-            >
-              <ImgRole src={choice.image} alt="" />
-              <Ptext>{choice.title}</Ptext>
-            </OptionCard>
-          ))}
-        </OptionCards>
-        <SizedButtonDiv style={{ padding: '10px' }}>
-          <PreviousPageButton onClick={() => setPageNumber(1)}>
-            {t('previousStep')}
-          </PreviousPageButton>
-          <Button
-            arrowed
-            label={t('nextStep')}
-            onClick={async (e: any) => {
-              const interests: string[] = choicesOptions.filter((option: any) => option.selected === true).map((option: any) => option.titleEn);
-              const listNbOfPeopleInTeam: string[] = numberOfPeopleChoices.filter((option: any) => option.selected === true).map((option: any) => option.title);
-              const employeeNumber = listNbOfPeopleInTeam.length === 1 ? listNbOfPeopleInTeam[0] : null;
-              const language = i18n.resolvedLanguage;
-              // eslint-disable-next-line react/destructuring-assignment
-              const companyNameToLowerCase = companyName.toLowerCase();
-              await submitSignupForm(
-                email,
-                companyNameToLowerCase,
-                firstName,
-                lastName,
-                language,
-                password,
-                passwordVerification,
-                job,
-                employeeNumber,
-                interests,
-                e,
-                navigate,
-                dispatch,
-                setMessages,
-                t,
-                setPageNumber,
-                setLoading,
-              );
-            }}
-          />
-        </SizedButtonDiv>
-      </SignupBigForm>
-      {' '}
-      <FooterDiv>
-        <LoadBar3 />
-      </FooterDiv>
-      { loading ? (
-        <LoadingContainer>
-          <LoadingDiv />
-        </LoadingContainer>
-      ) : null }
-
-    </RightDivPage1>
-  );
-}
-
 const submitSignupForm = async (
   email: string,
   companyName: string,
@@ -341,14 +283,11 @@ const submitSignupForm = async (
   passwordVerification: string,
   job: string,
   employeeNumber: string | null,
-  interests: string[],
   e: any,
   navigate: any,
   dispatch: any,
   setMessages: any,
   t: any,
-  setPageNumber: any,
-  setLoading: any,
 ) => {
   e.preventDefault();
   const fullName = `${firstName} ${lastName}`;
@@ -356,7 +295,6 @@ const submitSignupForm = async (
     validatePage0Form(firstName, lastName, email, password, passwordVerification, setMessages, t)
     && validatePage1Form(companyName, setMessages, t)
   ) {
-    setLoading(true);
     const response = await Auth.signup({
       email,
       companyName,
@@ -366,79 +304,20 @@ const submitSignupForm = async (
       passwordVerification,
       job,
       employeeNumber,
-      interests,
+      interests: [],
     });
     if (response.status === 200) {
       const result: SignupSuccessResponse = await response.json();
       // @ts-ignore
       dispatch(loginReducer({ accessToken: result.accessToken, type: 'user' }));
       await fetchUserInformations(dispatch, result.accessToken, navigate, t, setMessages);
-      setLoading(false);
-      setPageNumber(3);
+      navigate('/profile');
     } else {
-      setLoading(false);
       const result: BackendApiError = await response.json();
       setMessages(({ texts: [Auth.mapSignupErrorsMessage(t, result.message)], type: 'ERROR' }));
     }
   }
 };
-
-function DisplayPage3(loading: boolean, setLoading: any, firstName: string, setRedirectUrl: any, redirectUrl: string, t: any, navigate: any) {
-  return (
-    <RightDivPage1>
-      <RightNav>
-        <LogoImg onClick={() => window.open(process.env.REACT_APP_LANDING_URL, '_self')} src={logo} alt="" />
-      </RightNav>
-      {!loading
-        ? (
-          <SignupBigForm>
-            <SignupFormTitle>{t('weReady')}</SignupFormTitle>
-            <RedirectButtons>
-              <TopRedirectButtons>
-                <RedirectButton onClick={() => {
-                  setLoading(true);
-                  setRedirectUrl('/search');
-                }}
-                >
-                  <ImgRoleBig src={searchImage} alt="" />
-                  <Ptext>{t('newSearch')}</Ptext>
-                </RedirectButton>
-                <RedirectButton onClick={() => {
-                  setLoading(true);
-                  setRedirectUrl('/profile');
-                }}
-                >
-                  <ImgRoleBig src={importImage} alt="" />
-                  <Ptext>{t('importSaas')}</Ptext>
-                </RedirectButton>
-              </TopRedirectButtons>
-              <BottomRedirectButton onClick={() => {
-                setLoading(true);
-                setRedirectUrl('/connectors');
-              }}
-              >
-                <TextP>{t('discoverDashboard')}</TextP>
-
-              </BottomRedirectButton>
-            </RedirectButtons>
-          </SignupBigForm>
-        )
-        : <LoadingComponent text={t('welcomeGetFluence', { name: firstName })} footerText={t('dataSecure')} action={() => navigate(redirectUrl)} timer={2} />}
-      {' '}
-      {!loading
-        ? (
-          <FooterDiv>
-            <LoadBar4 />
-          </FooterDiv>
-        )
-        : (
-          <FooterDiv>
-            <LoadBar5 />
-          </FooterDiv>
-        )}
-    </RightDivPage1>
-  );
-}
 
 const Page = styled.div`
   display: flex;
@@ -490,16 +369,6 @@ const SignupForm = styled.form`
   display: flex;
   flex-direction: column;
   width: 350px;
-`;
-
-const SignupBigForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: auto;
-  @media (max-width: 700px) {
-    width: 100%
-  }
 `;
 
 const SpaceDiv = styled.div`
@@ -606,133 +475,9 @@ const FooterDiv = styled.div`
   width: 100%;
 `;
 
-const OptionCards = styled.div`
-  display: flex;
-  justify-content: center;
-
-  flex-wrap: wrap;
-  margin-top: 30px;
-  width: 500px;
-  @media (max-width: 700px) {
-    justify-content: center;
-  }
-`;
-
-const OptionCard = styled.div`
-  display: flex;
-  height: 140px;
-  width: 208px;
-  border: 1px solid #D2D9F1;
-  background-color: white;
-  border-radius: 8px;
-  padding: 5px;
-  justify-content: center;
-  cursor: pointer;
-  margin: 10px;
-`;
-
-const ImgRole = styled.img`
-  height: 42px;
-  width: 50px;
-  position: absolute;
-  margin-top: 2.5%;
-`;
-
-const Ptext = styled.p`
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  height: 20px;
-  justify-content: center;
-  text-align: center;
-  margin-top: 40%;
-  color: #3368DD;
-  font-weight: 700;
-  font-size: 16px;
-`;
-
-const LoadingContainer = styled.div`
-  position: absolute;
-  display: flex;
-  width: 100%;
-  height: 114%;
-  background-color: rgba(189, 195, 199, 0.8);
-  align-items: center;
-  justify-content: center;
-`;
-
-const LoadingDiv = styled.div`
-display: flex;
-border: 12px solid #f3f3f3; /* Light grey */
-border-top: 12px solid #3368DD; /* Blue */
-border-radius: 50%;
-width: 80px;
-height: 80px;
-animation: spin 2s linear infinite;
-`;
-
-const RedirectButtons = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: 30px;
-  @media (max-width: 700px) {
-    justify-content: center;
-  }
-`;
-
-const TopRedirectButtons = styled.div`
-  display: flex;
-  gap: 15px;
-  @media (max-width: 750px) {
-    flex-direction: column;
-  }
-`;
-
-const RedirectButton = styled.div`
-  display: flex;
-  height: 264px;
-  width: 320px;
-  border: 1px solid #D2D9F1;
-  background-color: white;
-  border-radius: 8px;
-  padding: 5px;
-  justify-content: center;
-  cursor: pointer;
-`;
-
-const ImgRoleBig = styled.img`
-  display:flex;
-  height: 58px;
-  width: 58px;
-  position: absolute;
-  margin-top: 60px;
-`;
-
-const BottomRedirectButton = styled.div`
-  display: flex;
-  height: 15%;
-  width: 100%;
-  border: 1px solid #D2D9F1;
-  background-color: white;
-  border-radius: 8px;
-  padding: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-`;
-
-const TextP = styled.p`
-  height: 100%;
-  width: 100%;
-  text-align: center;
-  margin-top: 5px;
-  color: #3368DD;
-  font-weight: 700;
-  font-size: 16px;
-`;
-
 const LoadBar = styled.div`
 height: 8px;
-width: 40%;
+width: 50%;
 animation: load 3s normal forwards;
 box-shadow: 0 10px 40px -10px #fff;
 background: #3368DD;
@@ -743,47 +488,6 @@ border-bottom-right-radius: 10px 10px;
   0% { width: 0%; }
   100% { width: 40%; }
 }
-`;
-
-const LoadBar3 = styled.div`
-  height: 8px;
-  width: 65%;
-  animation: load2 3s normal forwards;
-  box-shadow: 0 10px 40px -10px #fff;
-  background: #3368DD;
-  width: 0;
-  border-top-right-radius: 10px 10px;
-  border-bottom-right-radius: 10px 10px;
-  @keyframes load2 {
-    0% { width: 40%; }
-    100% { width: 65%; }
-  }
-`;
-
-const LoadBar4 = styled.div`
-  height: 8px;
-  width: 90%;
-  background: #3368DD;
-  border-top-right-radius: 10px 10px;
-  border-bottom-right-radius: 10px 10px;
-  animation: load4 3s normal forwards;
-  @keyframes load4 {
-    0% { width: 65%; }
-    100% { width: 90%; }
-  }
-`;
-
-const LoadBar5 = styled.div`
-  height: 8px;
-  width: 90%;
-  background: #3368DD;
-  border-top-right-radius: 10px 10px;
-  border-bottom-right-radius: 10px 10px;
-  animation: load4 3s normal forwards;
-  @keyframes load4 {
-    0% { width: 90%; }
-    100% { width: 100%; }
-  }
 `;
 
 export default SignUp;
